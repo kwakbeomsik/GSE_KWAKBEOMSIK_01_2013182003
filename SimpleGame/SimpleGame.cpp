@@ -16,31 +16,47 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
+Object* pObject = new Object;
+
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-
+	
+	
 	// Renderer Test
-	g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+
+	
+	g_Renderer->DrawSolidRect(pObject->GetPosition().x, pObject->GetPosition().y, pObject->GetPosition().z, 20, 1, 0, 1, 1);
 
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
+	pObject->Update();
 	RenderScene();
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
+	if (state == GLUT_DOWN)
+	{
+		if (button == GLUT_LEFT_BUTTON)
+		{
+			pObject->SetPosition(x-250, (y-250) * -1, 0);
+		}
+	}
 	RenderScene();
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
+
 	RenderScene();
+	
 }
 
 void SpecialKeyInput(int key, int x, int y)
@@ -56,8 +72,9 @@ int main(int argc, char **argv)
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(500, 500);
 	glutCreateWindow("Game Software Engineering KPU");
-
+	
 	glewInit();
+
 	if (glewIsSupported("GL_VERSION_3_0"))
 	{
 		std::cout << " GLEW Version is 3.0\n ";
@@ -79,7 +96,7 @@ int main(int argc, char **argv)
 	glutKeyboardFunc(KeyInput);
 	glutMouseFunc(MouseInput);
 	glutSpecialFunc(SpecialKeyInput);
-
+	
 	glutMainLoop();
 
 	delete g_Renderer;

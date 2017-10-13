@@ -6,13 +6,16 @@
 #include <iostream>
 
 #include "Dependencies\glew.h"
+#include "Object.h"
 
 class Renderer
 {
+	
 public:
 	Renderer(int windowSizeX, int windowSizeY);
 	~Renderer();
 
+	
 	bool IsInitialized();
 	void DrawSolidRect(float x, float y, float z, float size, float r, float g, float b, float a);
 
@@ -28,7 +31,7 @@ private:
 	
 	unsigned int m_WindowSizeX = 0;
 	unsigned int m_WindowSizeY = 0;
-
+	
 	GLuint m_VBORect = 0;
 	GLuint m_SolidRectShader = 0;
 };
