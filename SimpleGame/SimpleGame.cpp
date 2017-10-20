@@ -13,30 +13,37 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\glew.h"
 #include "Dependencies\freeglut.h"
 
+
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
-Object* pObject = new Object;
-
+//Object* pObject = new Object;
+SceneMgr* pSceneMgr = new SceneMgr;
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 	
-	
 	// Renderer Test
 	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-
+	//g_Renderer->DrawSolidRect(pObject->GetPosition().x, pObject->GetPosition().y, pObject->GetPosition().z, 20, 1, 0, 1, 1);
 	
-	g_Renderer->DrawSolidRect(pObject->GetPosition().x, pObject->GetPosition().y, pObject->GetPosition().z, 20, 1, 0, 1, 1);
+	for (int i = 0; i < 50; ++i)
+	{
+		g_Renderer->DrawSolidRect(pSceneMgr->m_Object[i]->GetPosition().x, pSceneMgr->m_Object[i]->GetPosition().y, pSceneMgr->m_Object[i]->GetPosition().z, 20, 1, 0, 1, 1);
+	}
 
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
-	pObject->Update();
+	//pObject->Update();
+	for (int i = 0; i < 50; ++i)
+	{
+		pSceneMgr->m_Object[i]->Update();
+	}
 	RenderScene();
 }
 
@@ -46,7 +53,7 @@ void MouseInput(int button, int state, int x, int y)
 	{
 		if (button == GLUT_LEFT_BUTTON)
 		{
-			pObject->SetPosition(x-250, (y-250) * -1, 0);
+			//pObject->SetPosition(x-250, (y-250) * -1, 0);
 		}
 	}
 	RenderScene();

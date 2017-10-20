@@ -1,7 +1,4 @@
 #pragma once
-#include <cmath>
-#include <ctime>
-
 
 struct Pos
 {
@@ -21,8 +18,8 @@ private:
 
 public:
 	Pos GetPosition() { return tagPos; };
-	void Update();
 	void SetPosition(float x, float y, float z) { tagPos.x = x, tagPos.y = y, tagPos.z = z; }
+	void Update();
 
 public:
 	Object();

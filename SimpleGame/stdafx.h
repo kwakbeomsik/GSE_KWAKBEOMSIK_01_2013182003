@@ -4,3 +4,9 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <ctime>
+#include <iostream>
+using namespace std;
+
+
+#define MAX_OBJECTS_COUNT 50

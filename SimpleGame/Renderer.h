@@ -6,7 +6,7 @@
 #include <iostream>
 
 #include "Dependencies\glew.h"
-#include "Object.h"
+#include "SceneMgr.h"
 
 class Renderer
 {
