@@ -29,41 +29,61 @@ void RenderScene(void)
 	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
 	//g_Renderer->DrawSolidRect(pObject->GetPosition().x, pObject->GetPosition().y, pObject->GetPosition().z, 20, 1, 0, 1, 1);
 	
-	for (int i = 0; i < 50; ++i)
+	
+	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
-		g_Renderer->DrawSolidRect(pSceneMgr->m_Object[i]->GetPosition().x, pSceneMgr->m_Object[i]->GetPosition().y, pSceneMgr->m_Object[i]->GetPosition().z, 20, 1, 0, 1, 1);
+		g_Renderer->DrawSolidRect(pSceneMgr->m_Object[i]->GetPosition().x, pSceneMgr->m_Object[i]->GetPosition().y, pSceneMgr->m_Object[i]->GetPosition().z, 5, 1, 1, 1, 1);
+
+	}
+	
+	g_Renderer->DrawSolidRect(pSceneMgr->m_Build->GetPosition().x, pSceneMgr->m_Build->GetPosition().y, pSceneMgr->m_Build->GetPosition().z, 50, 1, 1, 0, 0);
+	
+	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
+	{
+		if (pSceneMgr->CheckCollision(pSceneMgr->m_Object[i]) == true)
+		{
+			delete pSceneMgr->m_Object[i];
+			pSceneMgr->m_Build->Life -= pSceneMgr->m_Object[i]->Life;
+			
+			cout << pSceneMgr->m_Build->Life << endl;
+		
+		}
 	}
 
+
+	
 	glutSwapBuffers();
 }
 
 void Idle(void)
 {
+
+
 	//pObject->Update();
-	for (int i = 0; i < 50; ++i)
+	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		pSceneMgr->m_Object[i]->Update();
 	}
 	RenderScene();
+
 }
 
 void MouseInput(int button, int state, int x, int y)
 {
-	if (state == GLUT_DOWN)
+	if (button == GLUT_LEFT_BUTTON)
 	{
-		if (button == GLUT_LEFT_BUTTON)
+		if (state == GLUT_DOWN)
 		{
-			//pObject->SetPosition(x-250, (y-250) * -1, 0);
+			
 		}
 	}
+
 	RenderScene();
 }
 
 void KeyInput(unsigned char key, int x, int y)
 {
-
 	RenderScene();
-	
 }
 
 void SpecialKeyInput(int key, int x, int y)
@@ -107,7 +127,7 @@ int main(int argc, char **argv)
 	glutMainLoop();
 
 	delete g_Renderer;
-
+	
     return 0;
 }
 

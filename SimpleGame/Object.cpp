@@ -4,16 +4,14 @@
 
 Object::Object()
 {
-
 }
-
-
 Object::~Object()
 {
 }
 void Object::Update()
 {
-	float Time = 0.3;
+	float Time = 0.03f;
+
 
 	tagPos.x = tagPos.x + v_x * Time;
 	tagPos.y = tagPos.y + v_y * Time;
@@ -36,6 +34,4 @@ void Object::Update()
 	{
 		v_y = -1 * v_y;
 	}
-	
-
 }

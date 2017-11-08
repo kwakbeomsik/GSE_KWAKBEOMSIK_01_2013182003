@@ -9,4 +9,4 @@
 using namespace std;
 
 
-#define MAX_OBJECTS_COUNT 50
+#define MAX_OBJECTS_COUNT 10
