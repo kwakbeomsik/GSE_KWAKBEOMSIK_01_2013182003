@@ -11,6 +11,8 @@ class SceneMgr
 public:
 	Object* m_Object[MAX_OBJECTS_COUNT];
 	Object* m_Build;
+	Object* m_Bullet[MAX_OBJECTS_COUNT];
+	Object* m_Arrow;
 
 public:
 	bool CheckCollision(Object* Object);

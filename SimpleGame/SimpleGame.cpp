@@ -33,6 +33,7 @@ void RenderScene(void)
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		g_Renderer->DrawSolidRect(pSceneMgr->m_Object[i]->GetPosition().x, pSceneMgr->m_Object[i]->GetPosition().y, pSceneMgr->m_Object[i]->GetPosition().z, 5, 1, 1, 1, 1);
+		g_Renderer->DrawSolidRect(pSceneMgr->m_Bullet[i]->GetPosition().x, pSceneMgr->m_Bullet[i]->GetPosition().y, pSceneMgr->m_Bullet[i]->GetPosition().z, 2, 1, 0, 0, 1);
 
 	}
 	
@@ -43,11 +44,8 @@ void RenderScene(void)
 		if (pSceneMgr->CheckCollision(pSceneMgr->m_Object[i]) == true)
 		{
 			delete pSceneMgr->m_Object[i];
-			pSceneMgr->m_Build->Life -= pSceneMgr->m_Object[i]->Life;
-			
-			cout << pSceneMgr->m_Build->Life << endl;
-		
 		}
+
 	}
 
 
@@ -63,7 +61,9 @@ void Idle(void)
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		pSceneMgr->m_Object[i]->Update();
+		pSceneMgr->m_Bullet[i]->Update();
 	}
+
 	RenderScene();
 
 }

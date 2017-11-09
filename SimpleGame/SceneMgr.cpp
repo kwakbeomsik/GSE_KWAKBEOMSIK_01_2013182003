@@ -22,8 +22,7 @@ SceneMgr::SceneMgr()
 		m_Object[i]->v_x = rand() % 5 - 2;
 		m_Object[i]->v_y = rand() % 5 - 2;
 		
-		m_Object[i]->Life = 10;
-
+		
 		if (m_Object[i]->v_x == 0)
 		{
 			m_Object[i]->v_x -=	1;
@@ -32,11 +31,28 @@ SceneMgr::SceneMgr()
 		{
 			m_Object[i]->v_y += 1;
 		}
-	}
+		//////ÃÑ¾Ë
+		m_Bullet[i] = new Object;
 
+		m_Bullet[i]->v_x = rand() % 5 - 2;
+		m_Bullet[i]->v_y = rand() % 5 - 2;
+
+
+		if (m_Bullet[i]->v_x == 0)
+		{
+			m_Bullet[i]->v_x -= 1;
+		}
+		if (m_Bullet[i]->v_y == 0)
+		{
+			m_Bullet[i]->v_y += 1;
+		}
+
+
+	}
+	
 
 	m_Build = new Object;
-	m_Build->Life = 500;
+	
 }
 SceneMgr::~SceneMgr()
 {
