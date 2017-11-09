@@ -57,9 +57,9 @@ SceneMgr::SceneMgr()
 SceneMgr::~SceneMgr()
 {
 }
-bool SceneMgr::CheckCollision(Object* Object)
+bool SceneMgr::CheckCollision(Object* Object1, Object* Object2)
 {
-		if (sqrt((m_Build->GetPosition().x - Object->GetPosition().x)*(m_Build->GetPosition().x - Object->GetPosition().x) + (m_Build->GetPosition().y - Object->GetPosition().y)*(m_Build->GetPosition().y - Object->GetPosition().y)) <= 30)
+		if (sqrt((Object2->GetPosition().x - Object1->GetPosition().x)*(Object2->GetPosition().x - Object1->GetPosition().x) + (Object2->GetPosition().y - Object1->GetPosition().y)*(Object2->GetPosition().y - Object1->GetPosition().y)) <= 30)
 			return true;
 		else
 			return false;	

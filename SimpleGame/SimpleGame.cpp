@@ -17,18 +17,12 @@ but WITHOUT ANY WARRANTY.
 #include "Renderer.h"
 
 Renderer *g_Renderer = NULL;
-//Object* pObject = new Object;
 SceneMgr* pSceneMgr = new SceneMgr;
-
+int  iCount = 0;
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-	
-	// Renderer Test
-	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-	//g_Renderer->DrawSolidRect(pObject->GetPosition().x, pObject->GetPosition().y, pObject->GetPosition().z, 20, 1, 0, 1, 1);
-	
 	
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
@@ -41,10 +35,20 @@ void RenderScene(void)
 	
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
-		if (pSceneMgr->CheckCollision(pSceneMgr->m_Object[i]) == true)
+		if (pSceneMgr->CheckCollision(pSceneMgr->m_Object[i], pSceneMgr->m_Build) == true)
 		{
-			delete pSceneMgr->m_Object[i];
+			//delete pSceneMgr->m_Object[i];
+			pSceneMgr->m_Object[i]->SetPosition(0, 0, 0);
 		}
+		for (int j = 0; j < MAX_OBJECTS_COUNT; ++j)
+		{
+			if (pSceneMgr->CheckCollision(pSceneMgr->m_Object[i], pSceneMgr->m_Bullet[j]) == true)
+			{
+				pSceneMgr->m_Object[i]->SetPosition(0, 0, 0);
+				//delete pSceneMgr->m_Object[i];
+			}
+		}
+
 
 	}
 
@@ -55,9 +59,6 @@ void RenderScene(void)
 
 void Idle(void)
 {
-
-
-	//pObject->Update();
 	for (int i = 0; i < MAX_OBJECTS_COUNT; ++i)
 	{
 		pSceneMgr->m_Object[i]->Update();
@@ -70,11 +71,15 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
+	
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_DOWN)
 		{
-			
+			pSceneMgr->m_Object[iCount]->SetPosition(x-250, (y-250)*-1, 0);
+			++iCount;
+			if (iCount == 10)
+				iCount = 0;
 		}
 	}
 
