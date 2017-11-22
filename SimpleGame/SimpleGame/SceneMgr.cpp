@@ -9,12 +9,20 @@ SceneMgr::SceneMgr(int width, int height)
 		{
 			std::cout << "Renderer could not be initialized.. \n";
 		}
-	m_Building[0] = new Object(0, 0, OBJECT_BUILDING);
+
+	m_Building[0] = new Object(0, -300, OBJECT_BUILDING, PLAYER);
+	m_Building[1] = new Object(-200, -300, OBJECT_BUILDING, PLAYER);
+	m_Building[2] = new Object(200, -300, OBJECT_BUILDING, PLAYER);
+	m_Building[3] = new Object(0, 300, OBJECT_BUILDING, ENEMY);
+	m_Building[4] = new Object(-200, 300, OBJECT_BUILDING, ENEMY);
+	m_Building[5] = new Object(200, 300, OBJECT_BUILDING, ENEMY);
+
 }
 
 SceneMgr::~SceneMgr()
 {
 }
+
 bool SceneMgr::CheckCollision(Object* Object1, Object* Object2)
 {
 	if (Object1->GetPosition().x - Object1->Size/2 <= Object2->GetPosition().x + Object2->Size / 2 && Object1->GetPosition().x + Object1->Size / 2 >= Object2->GetPosition().x - Object2->Size / 2 && Object1->GetPosition().y + Object1->Size / 2 >= Object2->GetPosition().y - Object2->Size / 2 && Object1->GetPosition().y - Object1->Size / 2 <= Object2->GetPosition().y + Object2->Size / 2)
@@ -22,9 +30,8 @@ bool SceneMgr::CheckCollision(Object* Object1, Object* Object2)
 	else
 		return false;
 }
-int SceneMgr::AddActorObject(float x, float y, int type)
+int SceneMgr::AddActorObject(float x, float y, int type, int team)
 {
-	
 	switch (type)
 	{
 	case OBJECT_CHARACTER:
@@ -32,7 +39,7 @@ int SceneMgr::AddActorObject(float x, float y, int type)
 		{
 			if (m_Object[i] == NULL)
 			{
-				m_Object[i] = new Object(x, y, type);
+				m_Object[i] = new Object(x, y, type , team);
 				return i;
 			}
 		}
@@ -45,7 +52,7 @@ int SceneMgr::AddActorObject(float x, float y, int type)
 
 			if (m_Bullet[i] == NULL)
 			{
-				m_Bullet[i] = new Object(x, y, type);
+				m_Bullet[i] = new Object(x, y, type, team);
 				return i;
 			}
 		}
@@ -58,7 +65,7 @@ int SceneMgr::AddActorObject(float x, float y, int type)
 
 			if (m_Arrow[i] == NULL)
 			{
-				m_Arrow[i] = new Object(x, y, type);
+				m_Arrow[i] = new Object(x, y, type, team);
 				return i;
 			}
 		}
@@ -69,7 +76,7 @@ int SceneMgr::AddActorObject(float x, float y, int type)
 }
 void SceneMgr::DrawScene()
 {
-
+	//오브젝트 그려주기
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
 	{
 		if (m_Object[i] != NULL)
@@ -77,10 +84,22 @@ void SceneMgr::DrawScene()
 			m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A);
 		}
 	}
-	
-	if(m_Building[0] != NULL)
-		m_pRenderer->DrawTexturedRect(m_Building[0]->GetPosition().x, m_Building[0]->GetPosition().y, m_Building[0]->GetPosition().z, m_Building[0]->Size, m_Building[0]->R, m_Building[0]->G, m_Building[0]->B, m_Building[0]->A, m_pRenderer->CreatePngTexture("texture.png"));
+	//빌딩 그려주기
 
+	//플레이어
+	for (int i = 0; i < MAX_BUILDING_COUNT - 3; ++i)
+	{
+		if(m_Building[i] != NULL)
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture.png"));
+	}
+	//적
+	for (int i = MAX_BUILDING_COUNT - 3; i < MAX_BUILDING_COUNT; ++i)
+	{
+		if (m_Building[i] != NULL)
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture2.png"));
+	}
+
+	//총알 그려주기
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
 		if (m_Bullet[i] != NULL)
@@ -89,6 +108,7 @@ void SceneMgr::DrawScene()
 		}
 	}
 
+	//화살 그려주기
 	for (int i = 0; i < MAX_ARROW_COUNT; ++i)
 	{
 		if (m_Arrow[i] != NULL)
@@ -97,30 +117,34 @@ void SceneMgr::DrawScene()
 		}
 	}
 
-	
-	if (m_Building[0]->Life < 0)
+	// 빌딩 삭제
+	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
 	{
-		m_Building[0]->SetPosition(350, 350, 350);
-	/*	m_Building[0] = NULL;
-		delete m_Building[0];*/
+		if (m_Building[i]->Life <= 0)
+		{
+			m_Building[i]->SetPosition(500, 500, 350);
+		/*	m_Building[0] = NULL;
+			delete m_Building[0];*/
+		}
 	}
+	// 오브젝트 삭제
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
 	{
 		if (m_Object[i] != NULL)
 		{
-			if (m_Object[i]->Life < 0 || m_Object[i]->LifeTime < 0)
+			if (m_Object[i]->Life <= 0 || m_Object[i]->LifeTime < 0)
 			{
 				m_Object[i] = NULL;
 				delete m_Object[i];
-
 			}
 		}
 	}
+	// 총알 삭제
 	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
 	{
 		if (m_Bullet[i] != NULL)
 		{
-			if (m_Bullet[i]->Life < 0 || m_Bullet[i]->LifeTime < 0)
+			if (m_Bullet[i]->Life <= 0 || m_Bullet[i]->LifeTime < 0)
 			{
 				m_Bullet[i] = NULL;
 				delete m_Bullet[i];
@@ -128,11 +152,12 @@ void SceneMgr::DrawScene()
 			}
 		}
 	}
+	// 화살 삭제
 	for (int i = 0; i < MAX_ARROW_COUNT; ++i)
 	{
 		if (m_Arrow[i] != NULL)
 		{
-			if (m_Arrow[i]->Life < 0 || m_Arrow[i]->LifeTime < 0)
+			if (m_Arrow[i]->Life <= 0 || m_Arrow[i]->LifeTime < 0)
 			{
 				m_Arrow[i] = NULL;
 				delete m_Arrow[i];
@@ -140,5 +165,204 @@ void SceneMgr::DrawScene()
 			}
 		}
 	}
+}
+// 충돌 처리
+void SceneMgr::Collision()
+{
+	// 오브젝와 빌딩 충돌처리
+	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_BUILDING_COUNT; ++j)
+		{
+			if (m_Object[i] != NULL && m_Building[j] != NULL)
+			{
+				if (CheckCollision(m_Object[i], m_Building[j]) && m_Object[i]->Team != m_Building[j]->Team)
+				{
+					//m_Object[i]->Life = m_Object[i]->Life - m_Building[j]->Life;
+					//m_Building[j]->Life = m_Building[j]->Life - m_Object[i]->Life;
+				    m_Building[j]->Life -= 20.0f;
+					m_Object[i]->Life -= 200.0f;
+				}
+			}
+		}
+	}
+	//오브젝트와 총알 충돌처리
+	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_BULLET_COUNT; ++j)
+		{
+			if (m_Object[i] != NULL && m_Bullet[j] != NULL)
+			{
 
+				if (CheckCollision(m_Object[i], m_Bullet[j]) && m_Object[i]->Team != m_Bullet[j]->Team)
+				{
+					m_Bullet[j]->Life -= 20.0f;
+					m_Object[i]->Life -= 20.0f;
+				}
+			}
+		}
+	}
+	//화살과 빌딩 충돌처리
+	for (int i = 0; i < MAX_ARROW_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_BUILDING_COUNT; ++j)
+		{
+			if (m_Arrow[i] != NULL && m_Building[j] != NULL)
+			{
+
+				if (CheckCollision(m_Arrow[i], m_Building[j]) && m_Arrow[i]->Team != m_Building[j]->Team)
+				{
+					//pSceneMgr->m_Object[i]->Life = pSceneMgr->m_Object[i]->Life - pSceneMgr->m_Building[0]->Life;
+					//pSceneMgr->m_Building[0]->Life = pSceneMgr->m_Building[0]->Life - pSceneMgr->m_Object[i]->Life;
+					m_Building[j]->Life -= 20.0f;
+					m_Arrow[i]->Life -= 200.0f;
+				}
+			}
+		}
+	}
+	//총알과 빌딩 충돌처리
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_BUILDING_COUNT; ++j)
+		{
+			if (m_Bullet[i] != NULL && m_Building[j] != NULL)
+			{
+
+				if (CheckCollision(m_Bullet[i], m_Building[j]) && m_Bullet[i]->Team != m_Building[j]->Team)
+				{
+					//pSceneMgr->m_Object[i]->Life = pSceneMgr->m_Object[i]->Life - pSceneMgr->m_Building[0]->Life;
+					//pSceneMgr->m_Building[0]->Life = pSceneMgr->m_Building[0]->Life - pSceneMgr->m_Object[i]->Life;
+					m_Building[j]->Life -= 20.0f;
+					m_Bullet[i]->Life -= 200.0f;
+				}
+			}
+		}
+	}
+	//화살과 오브젝트 충돌처리
+	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	{
+		for (int j = 0; j < MAX_ARROW_COUNT; ++j)
+		{
+			if (m_Object[i] != NULL && m_Arrow[j] != NULL)
+			{
+
+				if (CheckCollision(m_Object[i], m_Arrow[j]) && m_Object[i]->Team != m_Arrow[j]->Team)
+				{
+					m_Arrow[j]->Life -= 10.0f;
+					m_Object[i]->Life -= 10.0f;
+				}
+			}
+		}
+	}
+	////오브젝트와 오브젝트 충돌처리
+	//for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	//{
+	//	for (int j = 0; j < MAX_OBJECT_COUNT; ++j)
+	//	{
+	//		if (m_Object[i] != NULL && m_Object[j] != NULL)
+	//		{
+
+	//			if (CheckCollision(m_Object[i], m_Object[j]) && m_Object[i]->Team != m_Object[j]->Team)
+	//			{
+	//				m_Object[j]->Life -= 10.0f;
+	//				m_Object[i]->Life -= 10.0f;
+	//			}
+	//		}
+	//	}
+	//}
+
+
+}
+void SceneMgr::UpdateAllObject(float elapsedTime)
+{
+	
+	
+	// 총알 생성
+	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
+	{
+		if (m_Building[i]->Team == PLAYER)
+		{
+			if (m_Building[i]->LastBullet > 10.0f)
+			{
+				AddActorObject(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, OBJECT_BULLET, PLAYER);
+				m_Building[i]->LastBullet = 0.0f;
+			}
+		}
+		else if (m_Building[i]->Team == ENEMY)
+		{
+			if (m_Building[i]->LastBullet > 10.0f)
+			{
+				AddActorObject(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, OBJECT_BULLET, ENEMY);
+				m_Building[i]->LastBullet = 0.0f;
+			}
+
+		}
+	}
+	// 화살 생성
+	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	{
+		if (m_Object[i] != NULL)
+		{
+			if (m_Object[i]->Team == PLAYER)
+			{
+				if (m_Object[i]->LastArrow > 3.0f)
+				{
+					AddActorObject(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, OBJECT_ARROW, PLAYER);
+					m_Object[i]->LastArrow = 0.0f;
+				}
+			}
+			else if (m_Object[i]->Team == ENEMY)
+			{
+				if (m_Object[i]->LastArrow > 3.0f)
+				{
+					AddActorObject(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, OBJECT_ARROW, ENEMY);
+					m_Object[i]->LastArrow = 0.0f;
+				}
+			}
+		}
+	}
+	//적 오브젝트 생성
+	float EnemyObjectX = rand() % 501 - 250;
+	float EnemyObjectY = rand() % 400;
+
+
+	if (m_Building[0]->EnemyRespawnTime > 5.0f)
+	{
+		AddActorObject(EnemyObjectX, EnemyObjectY, OBJECT_CHARACTER, ENEMY);
+		m_Building[0]->EnemyRespawnTime = 0.0f;
+	}
+	
+	
+	EnemyRespawnTime += elapsedTime;
+	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
+	{
+		if (m_Object[i] != NULL)
+			m_Object[i]->Update((float)elapsedTime);
+	}
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		if (m_Bullet[i] != NULL)
+			m_Bullet[i]->Update((float)elapsedTime);
+	}
+	for (int i = 0; i < MAX_ARROW_COUNT; ++i)
+	{
+		if (m_Arrow[i] != NULL)
+			m_Arrow[i]->Update((float)elapsedTime);
+	}
+	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
+	{
+		if (m_Building[i] != NULL)
+			m_Building[i]->Update((float)elapsedTime);
+	}
+
+}
+bool SceneMgr::PlayerRespawn()
+{
+	if (m_Building[0]->PlayerRespawnTime > 7.0f)
+	{
+		m_Building[0]->PlayerRespawnTime = 0.0f;
+		return true;
+	}
+	else
+		return false;
 }

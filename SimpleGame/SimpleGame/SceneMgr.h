@@ -12,12 +12,15 @@ public:
 	Object* m_Arrow[MAX_ARROW_COUNT];
 
 	Renderer* m_pRenderer;
-	Renderer* m_texCharacter;
+	float EnemyRespawnTime = 0.0f;
 
 public:
 	bool CheckCollision(Object* Object1, Object* Object2);
-	int AddActorObject(float x, float y, int type);
+	void Collision();
+	int AddActorObject(float x, float y, int type, int team);
+	void UpdateAllObject(float elapsedTime);
 	void DrawScene();
+	bool PlayerRespawn();
 	
 public:
 	SceneMgr(int width, int height);

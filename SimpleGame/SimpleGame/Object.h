@@ -22,6 +22,12 @@ public:
 	float G;
 	float B;
 	float A;
+	int Type;
+	int Team;
+	float LastBullet;
+	float LastArrow;
+	float EnemyRespawnTime = 5.0f;
+	float PlayerRespawnTime = 7.0f;
 
 public:
 	Pos GetPosition() { return tagPos; };
@@ -29,7 +35,7 @@ public:
 	void Update(float elapsedTime);
 	
 public:
-	Object(float x, float y, int type);
+	Object(float x, float y, int type, int team);
 	~Object();
 };
 
