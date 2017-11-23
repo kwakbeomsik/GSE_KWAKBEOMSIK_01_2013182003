@@ -78,7 +78,7 @@ Object::Object(float x, float y, int type, int team)
 		tagPos.x = x;
 		tagPos.y = y;
 
-		Size = 5;
+		Size = 2;
 		Life = 20;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)
@@ -88,8 +88,10 @@ Object::Object(float x, float y, int type, int team)
 			B = 1.0f;
 			A = 1.0f;
 			Team = PLAYER;
-			v_x = 600 * (rand() % 3 - 1) * 0.1f;
-			v_y = 600 * (rand() % 2) * 0.1f;
+			/*v_x = 600 * (rand() % 3 - 1) * 0.1f;
+			v_y = 600 * (rand() % 2) * 0.1f;*/
+			v_x = 600 * (rand() % 21 - 10) * 0.1f;
+			v_y = 600 * (rand() % 10) * 0.1f;
 			
 			if (v_y == 0 && v_x == 0)
 				v_y = 600 * 0.1f;
@@ -103,8 +105,10 @@ Object::Object(float x, float y, int type, int team)
 			B = 0.0f;
 			A = 1.0f;
 			Team = ENEMY;
-			v_x = 600 * (rand() % 3 - 1) * 0.1f;
-			v_y = -600 * ((rand() % 2) * 0.1f);
+		//	v_x = 600 * (rand() % 3 - 1) * 0.1f;
+		//	v_y = -600 * ((rand() % 2) * 0.1f);
+			v_x = 600 * (rand() % 21 - 10) * 0.1f;
+			v_y = -600 * (rand() % 10) * 0.1f;
 
 			if (v_y == 0 && v_x == 0)
 				v_y = -600 * 0.1f;
@@ -119,12 +123,14 @@ Object::Object(float x, float y, int type, int team)
 		tagPos.y = y;
 
 
-		v_x = 100 * (rand() % 3 - 1) * 0.1f;
-		v_y = 100 * (rand() % 3 - 1) * 0.1f;
+		//v_x = 100 * (rand() % 3 - 1) * 0.1f;
+		//v_y = 100 * (rand() % 3 - 1) * 0.1f;
+		v_x = 100 * (rand() % 21 - 10) * 0.1f;
+		v_y = 100 * (rand() % 21 - 10) * 0.1f;
 
 		if (v_y == 0 && v_x == 0)
 			v_y = 100 * 0.1f;
-		Size = 5;
+		Size = 2;
 		Life = 10;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)
