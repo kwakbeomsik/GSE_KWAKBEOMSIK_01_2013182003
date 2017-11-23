@@ -78,7 +78,7 @@ Object::Object(float x, float y, int type, int team)
 		tagPos.x = x;
 		tagPos.y = y;
 
-		Size = 2;
+		Size = 5;
 		Life = 20;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)
@@ -130,7 +130,7 @@ Object::Object(float x, float y, int type, int team)
 
 		if (v_y == 0 && v_x == 0)
 			v_y = 100 * 0.1f;
-		Size = 2;
+		Size = 5;
 		Life = 10;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)
