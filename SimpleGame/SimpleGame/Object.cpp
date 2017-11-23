@@ -22,10 +22,10 @@ Object::Object(float x, float y, int type, int team)
 		if (v_y == 0 && v_x == 0)
 			v_y = 300 * 0.1f;
 	
-		Size = 10;
-		Life = 10;
+		Size = 30;
+		Life = 100;
 		LifeTime = 1000.0f;
-
+		Gauge = float(Life / 100);
 		if (team == PLAYER)
 		{
 			R = 0.0f;
@@ -55,6 +55,7 @@ Object::Object(float x, float y, int type, int team)
 		Life = 500;
 		LastBullet = 0.0f;
 		LastArrow = 0.0f;
+		Gauge = float(Life / 500);
 		if (team == PLAYER)
 		{
 			R = 0.0f;
@@ -78,8 +79,8 @@ Object::Object(float x, float y, int type, int team)
 		tagPos.x = x;
 		tagPos.y = y;
 
-		Size = 5;
-		Life = 20;
+		Size = 4;
+		Life = 15;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)
 		{
@@ -130,7 +131,7 @@ Object::Object(float x, float y, int type, int team)
 
 		if (v_y == 0 && v_x == 0)
 			v_y = 100 * 0.1f;
-		Size = 5;
+		Size = 4;
 		Life = 10;
 		LifeTime = 1000.0f;
 		if (team == PLAYER)

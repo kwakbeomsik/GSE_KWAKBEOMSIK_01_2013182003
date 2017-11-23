@@ -28,6 +28,7 @@ public:
 	float LastArrow;
 	float EnemyRespawnTime = 5.0f;
 	float PlayerRespawnTime = 7.0f;
+	float Gauge;
 
 public:
 	Pos GetPosition() { return tagPos; };

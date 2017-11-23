@@ -81,7 +81,9 @@ void SceneMgr::DrawScene()
 	{
 		if (m_Object[i] != NULL)
 		{
-			m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A);
+			m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, LEVEL_GROUND);
+			m_pRenderer->DrawSolidRectGauge(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y + 20.0f, m_Object[i]->GetPosition().z, 30.0f, 3.0f, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_Object[i]->Gauge, LEVEL_GROUND);
+		
 		}
 	}
 	//빌딩 그려주기
@@ -89,14 +91,23 @@ void SceneMgr::DrawScene()
 	//플레이어
 	for (int i = 0; i < MAX_BUILDING_COUNT - 3; ++i)
 	{
-		if(m_Building[i] != NULL)
-			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture.png"));
+		if (m_Building[i] != NULL)
+		{
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture.png"), LEVEL_SKY);
+			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Gauge, LEVEL_GROUND);
+			
+		}
+
 	}
 	//적
 	for (int i = MAX_BUILDING_COUNT - 3; i < MAX_BUILDING_COUNT; ++i)
 	{
 		if (m_Building[i] != NULL)
-			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture2.png"));
+		{
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture2.png"), LEVEL_SKY);
+			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Gauge, LEVEL_GROUND);
+		}
+	
 	}
 
 	//총알 그려주기
@@ -104,7 +115,7 @@ void SceneMgr::DrawScene()
 	{
 		if (m_Bullet[i] != NULL)
 		{
-			m_pRenderer->DrawSolidRect(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, m_Bullet[i]->Size, m_Bullet[i]->R, m_Bullet[i]->G, m_Bullet[i]->B, m_Bullet[i]->A);
+			m_pRenderer->DrawSolidRect(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, m_Bullet[i]->Size, m_Bullet[i]->R, m_Bullet[i]->G, m_Bullet[i]->B, m_Bullet[i]->A, LEVEL_UNDERGROUND);
 		}
 	}
 
@@ -113,7 +124,7 @@ void SceneMgr::DrawScene()
 	{
 		if (m_Arrow[i] != NULL)
 		{
-			m_pRenderer->DrawSolidRect(m_Arrow[i]->GetPosition().x, m_Arrow[i]->GetPosition().y, m_Arrow[i]->GetPosition().z, m_Arrow[i]->Size, m_Arrow[i]->R, m_Arrow[i]->G, m_Arrow[i]->B, m_Arrow[i]->A);
+			m_pRenderer->DrawSolidRect(m_Arrow[i]->GetPosition().x, m_Arrow[i]->GetPosition().y, m_Arrow[i]->GetPosition().z, m_Arrow[i]->Size, m_Arrow[i]->R, m_Arrow[i]->G, m_Arrow[i]->B, m_Arrow[i]->A, LEVEL_UNDERGROUND);
 		}
 	}
 
@@ -180,8 +191,8 @@ void SceneMgr::Collision()
 				{
 					//m_Object[i]->Life = m_Object[i]->Life - m_Building[j]->Life;
 					//m_Building[j]->Life = m_Building[j]->Life - m_Object[i]->Life;
-				    m_Building[j]->Life -= 20.0f;
-					m_Object[i]->Life -= 200.0f;
+				    m_Building[j]->Life -= 100.0f;
+					m_Object[i]->Life -= 500.0f;
 				}
 			}
 		}
@@ -196,8 +207,8 @@ void SceneMgr::Collision()
 
 				if (CheckCollision(m_Object[i], m_Bullet[j]) && m_Object[i]->Team != m_Bullet[j]->Team)
 				{
-					m_Bullet[j]->Life -= 20.0f;
-					m_Object[i]->Life -= 20.0f;
+					m_Bullet[j]->Life -= 100.0f;
+					m_Object[i]->Life -= 15.0f;
 				}
 			}
 		}
@@ -214,8 +225,8 @@ void SceneMgr::Collision()
 				{
 					//pSceneMgr->m_Object[i]->Life = pSceneMgr->m_Object[i]->Life - pSceneMgr->m_Building[0]->Life;
 					//pSceneMgr->m_Building[0]->Life = pSceneMgr->m_Building[0]->Life - pSceneMgr->m_Object[i]->Life;
-					m_Building[j]->Life -= 20.0f;
-					m_Arrow[i]->Life -= 200.0f;
+					m_Building[j]->Life -= 10.0f;
+					m_Arrow[i]->Life -= 500.0f;
 				}
 			}
 		}
@@ -232,8 +243,8 @@ void SceneMgr::Collision()
 				{
 					//pSceneMgr->m_Object[i]->Life = pSceneMgr->m_Object[i]->Life - pSceneMgr->m_Building[0]->Life;
 					//pSceneMgr->m_Building[0]->Life = pSceneMgr->m_Building[0]->Life - pSceneMgr->m_Object[i]->Life;
-					m_Building[j]->Life -= 20.0f;
-					m_Bullet[i]->Life -= 200.0f;
+					m_Building[j]->Life -= 15.0f;
+					m_Bullet[i]->Life -= 500.0f;
 				}
 			}
 		}
@@ -248,7 +259,7 @@ void SceneMgr::Collision()
 
 				if (CheckCollision(m_Object[i], m_Arrow[j]) && m_Object[i]->Team != m_Arrow[j]->Team)
 				{
-					m_Arrow[j]->Life -= 10.0f;
+					m_Arrow[j]->Life -= 100.0f;
 					m_Object[i]->Life -= 10.0f;
 				}
 			}
@@ -282,7 +293,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 	{
 		if (m_Building[i]->Team == PLAYER)
 		{
-			if (m_Building[i]->LastBullet > 10.0f)
+			if (m_Building[i]->LastBullet > 5.0f)
 			{
 				AddActorObject(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, OBJECT_BULLET, PLAYER);
 				m_Building[i]->LastBullet = 0.0f;
@@ -322,11 +333,11 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 		}
 	}
 	//적 오브젝트 생성
-	float EnemyObjectX = rand() % 501 - 250;
-	float EnemyObjectY = rand() % 400;
+	float EnemyObjectX = float(rand() % 501 - 250);
+	float EnemyObjectY = float(rand() % 400);
 
 
-	if (m_Building[0]->EnemyRespawnTime > 5.0f)
+	if (m_Building[0]->EnemyRespawnTime > 3.0f)
 	{
 		AddActorObject(EnemyObjectX, EnemyObjectY, OBJECT_CHARACTER, ENEMY);
 		m_Building[0]->EnemyRespawnTime = 0.0f;
@@ -358,7 +369,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 }
 bool SceneMgr::PlayerRespawn()
 {
-	if (m_Building[0]->PlayerRespawnTime > 7.0f)
+	if (m_Building[0]->PlayerRespawnTime > 3.0f)
 	{
 		m_Building[0]->PlayerRespawnTime = 0.0f;
 		return true;
