@@ -13,6 +13,7 @@ public:
 
 	Renderer* m_pRenderer;
 	float EnemyRespawnTime = 0.0f;
+	int iFrameMove = 0;
 
 public:
 	bool CheckCollision(Object* Object1, Object* Object2);

@@ -76,12 +76,17 @@ int SceneMgr::AddActorObject(float x, float y, int type, int team)
 }
 void SceneMgr::DrawScene()
 {
+	//배경 그려주기
+	m_pRenderer->DrawTexturedRect(0, 0, 0, 700, 1.0f, 1.0f, 1.0f, 1.0f, m_pRenderer->CreatePngTexture("BackGround.png"), 0.9);
+
 	//오브젝트 그려주기
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
 	{
 		if (m_Object[i] != NULL)
 		{
-			m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, LEVEL_GROUND);
+			//m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, LEVEL_GROUND);
+			
+			m_pRenderer->DrawTexturedRectSeq(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_pRenderer->CreatePngTexture("Character_Enemy1.png"), iFrameMove, 0, 9, 2, LEVEL_GROUND);
 			m_pRenderer->DrawSolidRectGauge(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y + 20.0f, m_Object[i]->GetPosition().z, 30.0f, 3.0f, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_Object[i]->Life/100.0f, LEVEL_GROUND);
 		
 		}
@@ -115,6 +120,7 @@ void SceneMgr::DrawScene()
 		if (m_Bullet[i] != NULL)
 		{
 			m_pRenderer->DrawSolidRect(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, m_Bullet[i]->Size, m_Bullet[i]->R, m_Bullet[i]->G, m_Bullet[i]->B, m_Bullet[i]->A, LEVEL_UNDERGROUND);
+			m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 3, 1, 1, 1, 1, 0, 0, m_pRenderer->CreatePngTexture("Bullet_particle.png"), iFrameMove);
 		}
 	}
 
@@ -124,6 +130,7 @@ void SceneMgr::DrawScene()
 		if (m_Arrow[i] != NULL)
 		{
 			m_pRenderer->DrawSolidRect(m_Arrow[i]->GetPosition().x, m_Arrow[i]->GetPosition().y, m_Arrow[i]->GetPosition().z, m_Arrow[i]->Size, m_Arrow[i]->R, m_Arrow[i]->G, m_Arrow[i]->B, m_Arrow[i]->A, LEVEL_UNDERGROUND);
+
 		}
 	}
 
@@ -285,7 +292,16 @@ void SceneMgr::Collision()
 }
 void SceneMgr::UpdateAllObject(float elapsedTime)
 {
-	
+	//프레임 적용
+	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
+	{
+		if (m_Building[i]->LastBullet > 0.3f)
+		{
+			iFrameMove++;
+			if (iFrameMove > 9)
+				iFrameMove = 0;
+		}
+	}
 	
 	// 총알 생성
 	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)

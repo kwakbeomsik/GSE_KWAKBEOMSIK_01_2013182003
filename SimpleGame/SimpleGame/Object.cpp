@@ -22,7 +22,7 @@ Object::Object(float x, float y, int type, int team)
 		if (v_y == 0 && v_x == 0)
 			v_y = 300 * 0.1f;
 	
-		Size = 30;
+		Size = 50;
 		Life = 100.0f;
 		LifeTime = 1000.0f;
 		Gauge = Life / 100.0f;
