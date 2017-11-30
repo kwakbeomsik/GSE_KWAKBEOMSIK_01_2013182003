@@ -82,7 +82,7 @@ void SceneMgr::DrawScene()
 		if (m_Object[i] != NULL)
 		{
 			m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, LEVEL_GROUND);
-			m_pRenderer->DrawSolidRectGauge(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y + 20.0f, m_Object[i]->GetPosition().z, 30.0f, 3.0f, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_Object[i]->Gauge, LEVEL_GROUND);
+			m_pRenderer->DrawSolidRectGauge(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y + 20.0f, m_Object[i]->GetPosition().z, 30.0f, 3.0f, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_Object[i]->Life/100.0f, LEVEL_GROUND);
 		
 		}
 	}
@@ -94,8 +94,7 @@ void SceneMgr::DrawScene()
 		if (m_Building[i] != NULL)
 		{
 			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture.png"), LEVEL_SKY);
-			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Gauge, LEVEL_GROUND);
-			
+			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Life/500.0f, LEVEL_GROUND);
 		}
 
 	}
@@ -105,7 +104,7 @@ void SceneMgr::DrawScene()
 		if (m_Building[i] != NULL)
 		{
 			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture2.png"), LEVEL_SKY);
-			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Gauge, LEVEL_GROUND);
+			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Life/500.0f, LEVEL_GROUND);
 		}
 	
 	}
@@ -293,7 +292,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 	{
 		if (m_Building[i]->Team == PLAYER)
 		{
-			if (m_Building[i]->LastBullet > 5.0f)
+			if (m_Building[i]->LastBullet > 2.0f)
 			{
 				AddActorObject(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, OBJECT_BULLET, PLAYER);
 				m_Building[i]->LastBullet = 0.0f;
@@ -301,7 +300,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 		}
 		else if (m_Building[i]->Team == ENEMY)
 		{
-			if (m_Building[i]->LastBullet > 10.0f)
+			if (m_Building[i]->LastBullet > 2.0f)
 			{
 				AddActorObject(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, OBJECT_BULLET, ENEMY);
 				m_Building[i]->LastBullet = 0.0f;
@@ -324,7 +323,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 			}
 			else if (m_Object[i]->Team == ENEMY)
 			{
-				if (m_Object[i]->LastArrow > 3.0f)
+				if (m_Object[i]->LastArrow > 2.0f)
 				{
 					AddActorObject(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, OBJECT_ARROW, ENEMY);
 					m_Object[i]->LastArrow = 0.0f;
@@ -337,7 +336,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 	float EnemyObjectY = float(rand() % 400);
 
 
-	if (m_Building[0]->EnemyRespawnTime > 3.0f)
+	if (m_Building[0]->EnemyRespawnTime > 2.0f)
 	{
 		AddActorObject(EnemyObjectX, EnemyObjectY, OBJECT_CHARACTER, ENEMY);
 		m_Building[0]->EnemyRespawnTime = 0.0f;
@@ -369,7 +368,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 }
 bool SceneMgr::PlayerRespawn()
 {
-	if (m_Building[0]->PlayerRespawnTime > 3.0f)
+	if (m_Building[0]->PlayerRespawnTime > 2.0f)
 	{
 		m_Building[0]->PlayerRespawnTime = 0.0f;
 		return true;
