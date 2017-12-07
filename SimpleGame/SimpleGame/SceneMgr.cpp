@@ -84,7 +84,7 @@ int SceneMgr::AddActorObject(float x, float y, int type, int team)
 void SceneMgr::DrawScene()
 {
 	//배경 그려주기
-	m_pRenderer->DrawTexturedRect(0, 0, 0, 700, 1.0f, 1.0f, 1.0f, 1.0f, iTexture[0], 0.9);
+	m_pRenderer->DrawTexturedRect(0, 0, 0, 800, 1.0f, 1.0f, 1.0f, 1.0f, iTexture[0], 0.9);
 
 	//오브젝트 그려주기
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
