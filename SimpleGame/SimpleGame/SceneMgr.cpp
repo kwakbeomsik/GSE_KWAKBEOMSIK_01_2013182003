@@ -16,6 +16,13 @@ SceneMgr::SceneMgr(int width, int height)
 	m_Building[3] = new Object(0, 300, OBJECT_BUILDING, ENEMY);
 	m_Building[4] = new Object(-200, 300, OBJECT_BUILDING, ENEMY);
 	m_Building[5] = new Object(200, 300, OBJECT_BUILDING, ENEMY);
+	iTexture[0] = m_pRenderer->CreatePngTexture("BackGround.png");
+	iTexture[1] = m_pRenderer->CreatePngTexture("texture.png");
+	iTexture[2] = m_pRenderer->CreatePngTexture("texture2.png");
+	iTexture[3] = m_pRenderer->CreatePngTexture("Character_Enemy1.png");
+	iTexture[4] = m_pRenderer->CreatePngTexture("Particle.png");
+
+	fBulletFrame = 0.0f;
 
 }
 
@@ -77,7 +84,7 @@ int SceneMgr::AddActorObject(float x, float y, int type, int team)
 void SceneMgr::DrawScene()
 {
 	//배경 그려주기
-	m_pRenderer->DrawTexturedRect(0, 0, 0, 700, 1.0f, 1.0f, 1.0f, 1.0f, m_pRenderer->CreatePngTexture("BackGround.png"), 0.9);
+	m_pRenderer->DrawTexturedRect(0, 0, 0, 700, 1.0f, 1.0f, 1.0f, 1.0f, iTexture[0], 0.9);
 
 	//오브젝트 그려주기
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
@@ -86,7 +93,7 @@ void SceneMgr::DrawScene()
 		{
 			//m_pRenderer->DrawSolidRect(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, LEVEL_GROUND);
 			
-			m_pRenderer->DrawTexturedRectSeq(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_pRenderer->CreatePngTexture("Character_Enemy1.png"), iFrameMove, 0, 9, 2, LEVEL_GROUND);
+			m_pRenderer->DrawTexturedRectSeq(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y, m_Object[i]->GetPosition().z, m_Object[i]->Size, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, iTexture[3], iFrameMove, 0, 9, 2, LEVEL_GROUND);
 			m_pRenderer->DrawSolidRectGauge(m_Object[i]->GetPosition().x, m_Object[i]->GetPosition().y + 20.0f, m_Object[i]->GetPosition().z, 30.0f, 3.0f, m_Object[i]->R, m_Object[i]->G, m_Object[i]->B, m_Object[i]->A, m_Object[i]->Life/100.0f, LEVEL_GROUND);
 		
 		}
@@ -98,7 +105,7 @@ void SceneMgr::DrawScene()
 	{
 		if (m_Building[i] != NULL)
 		{
-			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture.png"), LEVEL_SKY);
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, iTexture[1], LEVEL_SKY);
 			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Life/500.0f, LEVEL_GROUND);
 		}
 
@@ -108,7 +115,7 @@ void SceneMgr::DrawScene()
 	{
 		if (m_Building[i] != NULL)
 		{
-			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_pRenderer->CreatePngTexture("texture2.png"), LEVEL_SKY);
+			m_pRenderer->DrawTexturedRect(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y, m_Building[i]->GetPosition().z, m_Building[i]->Size, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, iTexture[2], LEVEL_SKY);
 			m_pRenderer->DrawSolidRectGauge(m_Building[i]->GetPosition().x, m_Building[i]->GetPosition().y + 60.0f, m_Building[i]->GetPosition().z, 100.0f, 3.0f, m_Building[i]->R, m_Building[i]->G, m_Building[i]->B, m_Building[i]->A, m_Building[i]->Life/500.0f, LEVEL_GROUND);
 		}
 	
@@ -120,7 +127,11 @@ void SceneMgr::DrawScene()
 		if (m_Bullet[i] != NULL)
 		{
 			m_pRenderer->DrawSolidRect(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, m_Bullet[i]->Size, m_Bullet[i]->R, m_Bullet[i]->G, m_Bullet[i]->B, m_Bullet[i]->A, LEVEL_UNDERGROUND);
-			m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 3, 1, 1, 1, 1, 0, 0, m_pRenderer->CreatePngTexture("Bullet_particle.png"), iFrameMove);
+			if(m_Bullet[i]->v_y >= 0)
+				m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 7, 1, 1, 1, 1, 0, -1, iTexture[4], fBulletFrame);
+			else if (m_Bullet[i]->v_y < 0)
+				m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 7, 1, 1, 1, 1, 0, 1, iTexture[4], fBulletFrame);
+			
 		}
 	}
 
@@ -302,7 +313,18 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 				iFrameMove = 0;
 		}
 	}
-	
+	fBulletFrame += 0.1f;
+	if(fBulletFrame >= 1.0f)
+		fBulletFrame = 0.0f;
+	/*for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
+	{
+		if (m_Building[i]->LastBullet > 0.3f)
+		{
+			iFrameMove++;
+			if (iFrameMove > 9)
+				iFrameMove = 0;
+		}
+	}*/
 	// 총알 생성
 	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
 	{
