@@ -22,7 +22,7 @@ Object::Object(float x, float y, int type, int team)
 		if (v_y == 0 && v_x == 0)
 			v_y = 300 * 0.1f;
 	
-		Size = 50;
+		Size = 60;
 		Life = 100.0f;
 		LifeTime = 1000.0f;
 		Gauge = Life / 100.0f;
@@ -89,6 +89,7 @@ Object::Object(float x, float y, int type, int team)
 			B = 1.0f;
 			A = 1.0f;
 			Team = PLAYER;
+			Particletime = 0.0f;
 			/*v_x = 600 * (rand() % 3 - 1) * 0.1f;
 			v_y = 600 * (rand() % 2) * 0.1f;*/
 			v_x = 600 * (rand() % 21 - 10) * 0.1f;

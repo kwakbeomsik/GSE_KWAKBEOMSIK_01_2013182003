@@ -23,7 +23,11 @@ SceneMgr::SceneMgr(int width, int height)
 	iTexture[4] = m_pRenderer->CreatePngTexture("Particle.png");
 
 	fBulletFrame = 0.0f;
+	m_Sound = new Sound;
+	SoundBG[0] = m_Sound->CreateSound("Dependencies/SoundSamples/MF-W-90.XM");
+	SoundBG[1] = m_Sound->CreateSound("Dependencies/SoundSamples/explosion.wav");
 
+	m_Sound->PlaySoundW(SoundBG[0], true, 0.2f);
 }
 
 SceneMgr::~SceneMgr()
@@ -83,8 +87,11 @@ int SceneMgr::AddActorObject(float x, float y, int type, int team)
 }
 void SceneMgr::DrawScene()
 {
-	//배경 그려주기
 	m_pRenderer->DrawTexturedRect(0, 0, 0, 800, 1.0f, 1.0f, 1.0f, 1.0f, iTexture[0], 0.9);
+	m_pRenderer->DrawParticleClimate(0, 0, 0, 2, 1, 1, 1, 1, -0.1, -0.1, iTexture[4], fBulletFrame, LEVEL_GOD);
+
+	m_pRenderer->DrawTextW(-20, 0, GLUT_STROKE_ROMAN, 1, 0, 0, "KWAK BEOM SIK");
+	//배경 그려주기
 
 	//오브젝트 그려주기
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
@@ -127,11 +134,7 @@ void SceneMgr::DrawScene()
 		if (m_Bullet[i] != NULL)
 		{
 			m_pRenderer->DrawSolidRect(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, m_Bullet[i]->Size, m_Bullet[i]->R, m_Bullet[i]->G, m_Bullet[i]->B, m_Bullet[i]->A, LEVEL_UNDERGROUND);
-			if(m_Bullet[i]->v_y >= 0)
-				m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 7, 1, 1, 1, 1, 0, -1, iTexture[4], fBulletFrame);
-			else if (m_Bullet[i]->v_y < 0)
-				m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 7, 1, 1, 1, 1, 0, 1, iTexture[4], fBulletFrame);
-			
+			m_pRenderer->DrawParticle(m_Bullet[i]->GetPosition().x, m_Bullet[i]->GetPosition().y, m_Bullet[i]->GetPosition().z, 10, 1, 1, 1, 1, -m_Bullet[i]->v_x / 300, -m_Bullet[i]->v_y / 300, iTexture[4], m_Bullet[i]->Particletime, LEVEL_GOD);
 		}
 	}
 
@@ -210,10 +213,12 @@ void SceneMgr::Collision()
 					//m_Building[j]->Life = m_Building[j]->Life - m_Object[i]->Life;
 				    m_Building[j]->Life -= 100.0f;
 					m_Object[i]->Life -= 500.0f;
+					m_Sound->PlaySoundW(SoundBG[1], isSound, 0.2f);
 				}
 			}
 		}
 	}
+	isSound = false;
 	//오브젝트와 총알 충돌처리
 	for (int i = 0; i < MAX_OBJECT_COUNT; ++i)
 	{
@@ -303,6 +308,22 @@ void SceneMgr::Collision()
 }
 void SceneMgr::UpdateAllObject(float elapsedTime)
 {
+	if (m_Building[0]->GetPosition().x == 500 && m_Building[1]->GetPosition().x == 500 && m_Building[2]->GetPosition().x == 500)
+	{
+		m_pRenderer->DrawTextW(0, 0, GLUT_STROKE_ROMAN, 1, 0, 0, "Game Over");
+	}
+
+
+	for (int i = 0; i < MAX_BULLET_COUNT; ++i)
+	{
+		if (m_Bullet[i] != NULL)
+		{
+			m_Bullet[i]->Particletime += 0.002f;
+			//if (m_Bullet[i]->Particletime > 1.0f)
+				//m_Bullet[i]->Particletime = 0.0f;
+		}
+	}
+
 	//프레임 적용
 	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
 	{
@@ -313,18 +334,10 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 				iFrameMove = 0;
 		}
 	}
-	fBulletFrame += 0.1f;
-	if(fBulletFrame >= 1.0f)
-		fBulletFrame = 0.0f;
-	/*for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
-	{
-		if (m_Building[i]->LastBullet > 0.3f)
-		{
-			iFrameMove++;
-			if (iFrameMove > 9)
-				iFrameMove = 0;
-		}
-	}*/
+	fBulletFrame += 0.01f;
+	//if(fBulletFrame >= 1.0f)
+	//	fBulletFrame = 0.0f;
+	
 	// 총알 생성
 	for (int i = 0; i < MAX_BUILDING_COUNT; ++i)
 	{
@@ -406,7 +419,7 @@ void SceneMgr::UpdateAllObject(float elapsedTime)
 }
 bool SceneMgr::PlayerRespawn()
 {
-	if (m_Building[0]->PlayerRespawnTime > 2.0f)
+	if (m_Building[0]->PlayerRespawnTime > 1.0f)
 	{
 		m_Building[0]->PlayerRespawnTime = 0.0f;
 		return true;

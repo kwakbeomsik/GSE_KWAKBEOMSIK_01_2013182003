@@ -29,6 +29,7 @@ public:
 	float EnemyRespawnTime = 5.0f;
 	float PlayerRespawnTime = 7.0f;
 	float Gauge;
+	float Particletime;
 
 public:
 	Pos GetPosition() { return tagPos; };
